@@ -1,0 +1,9 @@
+.vscode
+.env
+.venv
+__debug*
+*_data/
+
+.DS_Store
+deploy.yaml
+tmp/
