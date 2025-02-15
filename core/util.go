@@ -260,6 +260,11 @@ func checkGnerateSIDFromLID(ld *msbimport.LineData) string {
 	id = strings.ReplaceAll(id, "-", "_")
 	id = strings.ReplaceAll(id, "__", "_")
 
+	// Remove invalid characters for Telegram sticker set names
+	// Only Latin letters, digits, and underscores are allowed
+	reg := regexp.MustCompile("[^a-zA-Z0-9_]")
+	id = reg.ReplaceAllString(id, "")
+
 	s := ld.Store + id + secHex(2) + "_by_" + botName
 
 	if len(s) > 64 {

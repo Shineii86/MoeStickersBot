@@ -1,3 +1,10 @@
+## [1.0.5] - 2025-02-15
+
+### Fixed
+- Fixed Telegram "invalid sticker set name" error for Kakao stickers
+- Sanitize sticker set ID to remove invalid characters (`=`, `+`, etc.)
+- Only Latin letters, digits, and underscores allowed in Telegram sticker set names
+
 ## [1.0.4] - 2025-02-15
 
 ### Fixed
