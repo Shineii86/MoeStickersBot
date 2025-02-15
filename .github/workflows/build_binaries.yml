@@ -13,12 +13,12 @@ jobs:
       - name: Build MSB CLI
         run: |
           go version
-          GOOS=linux GOARCH=amd64 go build -o MoeStickersBot_linux_amd64 cmd/moe-sticker-bot/main.go
-          GOOS=linux GOARCH=arm64 go build -o MoeStickersBot_linux_aarch64 cmd/moe-sticker-bot/main.go
-          GOOS=windows GOARCH=amd64 go build -o MoeStickersBot_windows_amd64.exe cmd/moe-sticker-bot/main.go
-          GOOS=windows GOARCH=arm64 go build -o MoeStickersBot_windows_aarch64.exe cmd/moe-sticker-bot/main.go
-          GOOS=darwin GOARCH=amd64 go build -o MoeStickersBot_macos_amd64 cmd/moe-sticker-bot/main.go
-          GOOS=darwin GOARCH=arm64 go build -o MoeStickersBot_macos_aarch64 cmd/moe-sticker-bot/main.go
+          GOOS=linux GOARCH=amd64 go build -o MoeStickersBot_linux_amd64 cmd/MoeStickersBot/main.go
+          GOOS=linux GOARCH=arm64 go build -o MoeStickersBot_linux_aarch64 cmd/MoeStickersBot/main.go
+          GOOS=windows GOARCH=amd64 go build -o MoeStickersBot_windows_amd64.exe cmd/MoeStickersBot/main.go
+          GOOS=windows GOARCH=arm64 go build -o MoeStickersBot_windows_aarch64.exe cmd/MoeStickersBot/main.go
+          GOOS=darwin GOARCH=amd64 go build -o MoeStickersBot_macos_amd64 cmd/MoeStickersBot/main.go
+          GOOS=darwin GOARCH=arm64 go build -o MoeStickersBot_macos_aarch64 cmd/MoeStickersBot/main.go
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3.1.2

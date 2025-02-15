@@ -19,6 +19,6 @@ PUBLIC_URL=/webapp REACT_APP_HOST=msb39.eu.org npm run build
 buildah copy $c1 build/ /webapp
 cd ../..
 
-buildah commit $c1 moe-sticker-bot:msb_nginx
+buildah commit $c1 MoeStickersBot:msb_nginx
 
-buildah push moe-sticker-bot:msb_nginx ghcr.io/Shineii86/MoeStickersBot:msb_nginx
+buildah push MoeStickersBot:msb_nginx ghcr.io/Shineii86/MoeStickersBot:msb_nginx

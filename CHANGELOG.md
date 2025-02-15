@@ -1,3 +1,14 @@
+## [1.0.1] - 2025-02-15
+
+### Changed
+- Renamed `cmd/moe-sticker-bot/` directory to `cmd/MoeStickersBot/`
+- Updated all build commands to use new cmd path
+- Updated go.sum checksums for Shineii86/telebot
+- Updated all workflow scripts to use MoeStickersBot naming
+- Updated pkg/msbimport/README.md to reference MoeStickersBot
+- Updated web/webapp3/README.md to reference MoeStickersBot
+- Full diagnostic sweep: zero `star-39` references remaining
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

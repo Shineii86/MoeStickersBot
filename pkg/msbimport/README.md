@@ -1,19 +1,19 @@
-# Moe-Sticker-Bot Import Component (msbimport)
+# MoeStickersBot Import Component (msbimport)
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/Shineii86/MoeStickersBot/pkg/msbimport.svg)](https://pkg.go.dev/github.com/Shineii86/MoeStickersBot/pkg/msbimport)
 
 ## Description
 This package is intended to fetch, parse, download and convert LINE and KakaoTalk Stickers from share link.
 
-It is designed to be able to operate independentaly from moe-sticker-bot core so third party apps can also utilize this package.
+It is designed to be able to operate independentaly from MoeStickersBot core so third party apps can also utilize this package.
 
 此套件或CLI用於解析LINE/Kakaotalk貼圖的分享連結並下載和轉換。
 
-此套件可獨立於moe-sticker-bot使用， 第三方App可以輕鬆利用此套件或CLI處理複雜貼圖。
+此套件可獨立於MoeStickersBot使用， 第三方App可以輕鬆利用此套件或CLI處理複雜貼圖。
 
 
 ## CLI Usage/終端機程式使用
-Source code of CLI is on: [/moe-sticker-bot/cmd/msbimport](https://github.com/Shineii86/MoeStickersBot/tree/master/cmd/msbimport)
+Source code of CLI is on: [/MoeStickersBot/cmd/msbimport](https://github.com/Shineii86/MoeStickersBot/tree/master/cmd/msbimport)
 
 Download `msbimport`： 下載`msbimport`： https://github.com/Shineii86/MoeStickersBot/releases
 

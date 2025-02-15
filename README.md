@@ -119,7 +119,7 @@ Dependencies above must be accessible through PATH. Don't ask me why they are re
 ```bash
 git clone https://github.com/Shineii86/MoeStickersBot && cd MoeStickersBot
 
-go build -o MoeStickersBot cmd/moe-sticker-bot/main.go
+go build -o MoeStickersBot cmd/MoeStickersBot/main.go
 ```
 
 #### WebApp

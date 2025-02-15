@@ -39,7 +39,7 @@ buildah copy $c1 ffmpeg-master-latest-linuxarm64-gpl/bin/ffmpeg /usr/local/bin/f
 
 
 # Build MSB go bin
-GOOS=linux GOARCH=arm64 go build -o MoeStickersBot cmd/moe-sticker-bot/main.go 
+GOOS=linux GOARCH=arm64 go build -o MoeStickersBot cmd/MoeStickersBot/main.go 
 buildah copy $c1 MoeStickersBot /MoeStickersBot
 
 # Copy tools.

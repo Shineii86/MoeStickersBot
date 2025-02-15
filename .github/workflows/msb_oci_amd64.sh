@@ -37,7 +37,7 @@ buildah copy $c1 ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /usr/local/bin/ffmp
 
 
 # Build MSB go bin
-go build -o MoeStickersBot cmd/moe-sticker-bot/main.go 
+go build -o MoeStickersBot cmd/MoeStickersBot/main.go 
 buildah copy $c1 MoeStickersBot /MoeStickersBot
 
 # Copy tools.

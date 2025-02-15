@@ -1,4 +1,4 @@
-name: Build nginx for @moe-sticker-bot
+name: Build nginx for @MoeStickersBot
 
 on:
   push:

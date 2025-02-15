@@ -1,4 +1,4 @@
-# WebApp for moe-sticker-bot
+# WebApp for MoeStickersBot
 
 Supports editing emoji and drag n drop to sort.
 
