@@ -1,9 +1,9 @@
-# [@moe_sticker_bot](https://t.me/moe_sticker_bot)
+# [@MoeStickersBot](https://t.me/MoeStickersBot)
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/Shineii86/MoeStickersBot.svg)](https://pkg.go.dev/github.com/Shineii86/MoeStickersBot)  ![Go Report](https://goreportcard.com/badge/github.com/Shineii86/MoeStickersBot)  ![CI](https://github.com/Shineii86/MoeStickersBot/actions/workflows/msb_oci.yml/badge.svg)  ![CI](https://github.com/Shineii86/MoeStickersBot/actions/workflows/build_binaries.yml/badge.svg) 
 
 
-[<img width="500" src="https://user-images.githubusercontent.com/75669297/222379608-1359ac0f-18ed-4a25-a91e-32974994d27b.png">](https://t.me/moe_sticker_bot)
+[<img width="500" src="https://user-images.githubusercontent.com/75669297/222379608-1359ac0f-18ed-4a25-a91e-32974994d27b.png">](https://t.me/MoeStickersBot)
 
 ---
 
@@ -37,7 +37,7 @@ Telegram用萌萌貼圖BOT。
   
   
 ## Screenshots
-[![MSB](https://img.shields.io/badge/-%40moe__sticker__bot-blue?style=plastic&logo=telegram)](https://t.me/moe_sticker_bot)
+[![MSB](https://img.shields.io/badge/-%40moestickersbot-blue?style=plastic&logo=telegram)](https://t.me/MoeStickersBot)
 
 <img width="487" alt="スクリーンショット 2023-02-27 午後7 29 35" src="https://user-images.githubusercontent.com/75669297/221539624-c0cc32a9-477c-425f-8e98-6566326385b4.png">
 
@@ -296,7 +296,7 @@ v2.1.0 (20230129)
 1.0 (20220513)
   * First stable release in go version.
   * Added support for downloading TGS and convert to GIF.
-  * Backing database for @moe_sticker_bot has gone complete sanitization.
+  * Backing database for @MoeStickersBot has gone complete sanitization.
 
 1.0 RC-9(20220512)
   * Add an administrative command to _sanitize_ database, which purges duplicated stickers.

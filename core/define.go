@@ -22,7 +22,7 @@ var botName string
 var autocommitWorkersList = make(map[int64][]chan bool)
 var users Users
 
-var MSB_DEFAULT_STICKER_KEYWORDS = []string{"sticker", "moe_sticker_bot", "moe"}
+var MSB_DEFAULT_STICKER_KEYWORDS = []string{"sticker", "MoeStickersBot", "moe"}
 
 const (
 	CB_DN_WHOLE           = "dall"

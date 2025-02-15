@@ -1,3 +1,15 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [1.0.2] - 2025-02-15
+
+### Changed
+- Updated Telegram bot handle from `moe_sticker_bot` to `MoeStickersBot`
+- Updated all bot references in README.md, core/message.go, core/define.go, test/tg_links.json
+- Fixed go.sum checksums for Shineii86/telebot/v3
+- Created v3.99.9 tag on Shineii86/telebot
+
 ## [1.0.1] - 2025-02-15
 
 ### Changed
@@ -8,10 +20,6 @@
 - Updated pkg/msbimport/README.md to reference MoeStickersBot
 - Updated web/webapp3/README.md to reference MoeStickersBot
 - Full diagnostic sweep: zero `star-39` references remaining
-
-# Changelog
-
-All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - 2025-02-15
 

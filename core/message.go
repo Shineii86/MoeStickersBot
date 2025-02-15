@@ -16,7 +16,7 @@ import (
 
 func sendStartMessage(c tele.Context) error {
 	message := `
-Hi! I'm <a href="https://github.com/Shineii86/MoeStickersBot">moe_sticker_bot</a>! Please:
+Hi! I'm <a href="https://github.com/Shineii86/MoeStickersBot">MoeStickersBot</a>! Please:
 • Send <b>LINE/Kakao sticker share link</b> to import or download.
 • Send <b>Telegram sticker/link/GIF</b> to download or export to WhatsApp.
 • Send <b>keywords</b> to search sticker sets.
