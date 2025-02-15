@@ -1,3 +1,12 @@
+## [1.0.6] - 2025-02-15
+
+### Fixed
+- Fixed Kakao sticker dimension error (STICKER_PNG_DIMENSIONS)
+- All Kakao stickers now properly converted to 512x512 WebP before upload
+- Fixed double extension issue (.png.webp → .webp)
+- Fixed file rename bug in magic bytes detection
+- Cleaned up conversion flow for Kakao stickers
+
 ## [1.0.5] - 2025-02-15
 
 ### Fixed

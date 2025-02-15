@@ -200,13 +200,13 @@ func prepareKakaoStickers(ctx context.Context, ld *LineData, workDir string, nee
 			default:
 			}
 
-			// Determine file extension from URL
+			// Save with proper extension based on URL
 			ext := ".png"
-			if strings.Contains(l, ".gif") || strings.HasSuffix(l, ".gif") {
+			if strings.Contains(l, ".gif") {
 				ext = ".gif"
-			} else if strings.Contains(l, ".webp") || strings.HasSuffix(l, ".webp") {
+			} else if strings.Contains(l, ".webp") {
 				ext = ".webp"
-			} else if strings.Contains(l, ".webm") || strings.HasSuffix(l, ".webm") {
+			} else if strings.Contains(l, ".webm") {
 				ext = ".webm"
 			}
 
@@ -218,22 +218,29 @@ func prepareKakaoStickers(ctx context.Context, ld *LineData, workDir string, nee
 				continue
 			}
 
-			// Detect actual file type from magic bytes
-			ext = detectFileExtension(f)
-			if ext != filepath.Ext(f) {
-				newF := strings.TrimSuffix(f, filepath.Ext(f)) + ext
-				os.Rename(f, f)
+			// Detect actual file type from magic bytes and rename if needed
+			detectedExt := detectFileExtension(f)
+			if detectedExt != ext {
+				newF := strings.TrimSuffix(f, ext) + detectedExt
+				os.Rename(f, newF)
 				f = newF
 			}
 
-			// Convert to Telegram-compatible format
+			// Convert to Telegram-compatible format (512x512 WebP)
 			var cf string
 			if ld.IsAnimated {
 				// For animated stickers, convert to animated WebP
 				cf, err = convertKakaoAnimated(f)
 			} else {
-				// For static stickers, convert to static WebP
-				cf, err = IMToWebpTGStatic(f, false)
+				// For static stickers, resize to 512x512 and convert to WebP
+				_, err = IMToWebpTGStatic(f, false)
+				if err == nil {
+					cf = f + ".webp"
+					// Rename to proper extension
+					properOut := strings.TrimSuffix(f, filepath.Ext(f)) + ".webp"
+					os.Rename(cf, properOut)
+					cf = properOut
+				}
 			}
 			if err != nil {
 				log.Warnf("Conversion failed for %s: %v", f, err)
