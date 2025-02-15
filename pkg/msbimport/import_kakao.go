@@ -75,10 +75,8 @@ func parseKakaoLink(link string, ld *LineData) (string, error) {
 		}
 		ld.DLinks = stickerUrls
 
-		// Detect animated stickers
-		if len(newApi.Contents.Items) > 0 && newApi.Contents.Items[0].AnimatedUrl != "" {
-			ld.IsAnimated = true
-		}
+		// Don't set IsAnimated here — detect from actual downloaded files later.
+		// The API's animatedUrl may return static PNGs for some packs.
 	}
 
 	ld.Link = link
@@ -226,14 +224,18 @@ func prepareKakaoStickers(ctx context.Context, ld *LineData, workDir string, nee
 				f = newF
 			}
 
+			// Detect if this is actually animated (GIF/WebM), not just from API metadata
+			actualExt := filepath.Ext(f)
+			isAnimatedFile := actualExt == ".gif" || actualExt == ".webm"
+
 			// Convert to Telegram-compatible format (512x512 WebP)
 			var cf string
-			if ld.IsAnimated {
+			if isAnimatedFile {
 				// For animated stickers, convert to animated WebP
 				cf, err = convertKakaoAnimated(f)
+				ld.IsAnimated = true
 			} else {
 				// For static stickers, resize to 512x512 and convert to WebP
-				// Don't use IMToWebpTGStatic — the [0] frame selector breaks WebP encoding
 				cf, err = convertKakaoStatic(f)
 			}
 			if err != nil {
