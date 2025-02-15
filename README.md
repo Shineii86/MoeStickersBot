@@ -94,6 +94,8 @@ If you are on ARM64 machine, use `aarch64` tag.
 
 See a real world deployment example on [deployments/kubernetes_msb.yaml](https://github.com/Shineii86/MoeStickersBot/blob/master/deployments/kubernetes_msb.yaml).
 
+### Deploy on Android (Termux)
+Run MoeStickersBot for free on your Android phone using Termux. See [TERMUX.md](TERMUX.md) for the complete guide.
 
 ### System Dependencies
 * ImageMagick(6 or 7, both fine)

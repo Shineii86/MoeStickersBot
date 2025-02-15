@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3] - 2025-02-15
+
+### Added
+- TERMUX.md: Complete guide for deploying on Android via Termux (free, 24/7)
+- Added Termux deployment section to README.md
+
 ## [1.0.2] - 2025-02-15
 
 ### Changed
