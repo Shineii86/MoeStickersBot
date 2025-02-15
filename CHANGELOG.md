@@ -1,3 +1,15 @@
+## [1.0.4] - 2025-02-15
+
+### Fixed
+- Fixed Kakao sticker import: updated API endpoint from `/api/v1/items/t/` to `/api/items/`
+- Added support for new Kakao API response format (hero/contents/items structure)
+- Fixed share link slug extraction to strip query parameters
+- Added animated sticker detection for Kakao (WebP, GIF, WebM formats)
+- Added proper file type detection from magic bytes
+- Added animated sticker conversion (GIF→WebP, WebM→WebP via ffmpeg)
+- Replaced broken `fetchKakaoDetailsFromShareLink` with `resolveKakaoShareLink`
+- Added fallback from new API to legacy API for older sticker packs
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

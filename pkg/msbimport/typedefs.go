@@ -86,6 +86,33 @@ type LineJson struct {
 	Url  string
 }
 
+// New Kakao API response structures (2024+)
+type KakaoHero struct {
+	Title    string `json:"title"`
+	ImageUrl string `json:"imageUrl"`
+	HashedId string `json:"hashedId"`
+}
+
+type KakaoCreator struct {
+	Name string `json:"name"`
+}
+
+type KakaoStickerItem struct {
+	AnimatedUrl    string `json:"animatedUrl"`
+	StillImageUrl  string `json:"stillImageUrl"`
+	SoundUrl       string `json:"soundUrl"`
+}
+
+type KakaoContents struct {
+	Items []KakaoStickerItem `json:"items"`
+}
+
+type KakaoNewAPI struct {
+	Hero     KakaoHero     `json:"hero"`
+	Creator  KakaoCreator  `json:"creator"`
+	Contents KakaoContents `json:"contents"`
+}
+
 type KakaoJsonResult struct {
 	//Korean title
 	Title string
