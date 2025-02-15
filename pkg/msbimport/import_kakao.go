@@ -233,14 +233,8 @@ func prepareKakaoStickers(ctx context.Context, ld *LineData, workDir string, nee
 				cf, err = convertKakaoAnimated(f)
 			} else {
 				// For static stickers, resize to 512x512 and convert to WebP
-				_, err = IMToWebpTGStatic(f, false)
-				if err == nil {
-					cf = f + ".webp"
-					// Rename to proper extension
-					properOut := strings.TrimSuffix(f, filepath.Ext(f)) + ".webp"
-					os.Rename(cf, properOut)
-					cf = properOut
-				}
+				// Don't use IMToWebpTGStatic — the [0] frame selector breaks WebP encoding
+				cf, err = convertKakaoStatic(f)
 			}
 			if err != nil {
 				log.Warnf("Conversion failed for %s: %v", f, err)
@@ -320,6 +314,18 @@ func convertKakaoAnimated(f string) (string, error) {
 func gifToAnimatedWebp(in string, out string) error {
 	cmd := exec.Command("ffmpeg", "-i", in, "-vf", "scale=512:512:force_original_aspect_ratio=decrease", "-loop", "0", "-compression_level", "4", "-quality", "80", out, "-y")
 	return cmd.Run()
+}
+
+// convertKakaoStatic converts a static Kakao sticker to 512x512 WebP for Telegram.
+func convertKakaoStatic(f string) (string, error) {
+	outFile := strings.TrimSuffix(f, filepath.Ext(f)) + ".webp"
+	cmd := exec.Command("convert", f, "-resize", "512x512", "-filter", "Lanczos", "-define", "webp:lossless=true", outFile)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Warnf("convertKakaoStatic failed: %s", string(out))
+		return "", err
+	}
+	return outFile, nil
 }
 
 func prepareKakaoZipStickers(ctx context.Context, ld *LineData, workDir string, needConvert bool) error {
