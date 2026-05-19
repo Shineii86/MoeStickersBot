@@ -89,6 +89,7 @@ func CheckDeps() []string {
 
 // Convert any image to static WEBP image, for Telegram use.
 // `format` takes either FORMAT_TG_REGULAR_STATIC or FORMAT_TG_EMOJI_STATIC
+// Telegram static stickers must be ≤512KB.
 func IMToWebpTGStatic(f string, isCustomEmoji bool) (string, error) {
 	pathOut := f + ".webp"
 	bin := CONVERT_BIN
@@ -112,13 +113,38 @@ func IMToWebpTGStatic(f string, isCustomEmoji bool) (string, error) {
 	}
 
 	// 100x100 should never exceed 255KIB, no need for extra check.
-	if st.Size() > 255*KiB {
-		args := CONVERT_ARGS
-		args = append(args, "-resize", "512x512", "-filter", "Lanczos", f+"[0]", pathOut)
-		exec.Command(bin, args...).CombinedOutput()
+	if isCustomEmoji {
+		return pathOut, nil
 	}
 
-	return pathOut, err
+	// Check against Telegram's 512KB limit for static stickers
+	if st.Size() <= 512*KiB {
+		return pathOut, nil
+	}
+
+	// File too big — fall back to lossy compression with decreasing quality
+	log.Warnf("IMToWebpTGStatic: lossless webp too large (%d bytes), trying lossy compression", st.Size())
+	qualities := []string{"90", "80", "70", "60", "50"}
+	for _, q := range qualities {
+		args = append(CONVERT_ARGS, "-resize", "512x512", "-filter", "Lanczos",
+			"-define", "webp:quality="+q, f+"[0]", pathOut)
+		out, err = exec.Command(bin, args...).CombinedOutput()
+		if err != nil {
+			log.Warnln("IMToWebpTGStatic quality fallback ERROR:", string(out))
+			continue
+		}
+		st, err = os.Stat(pathOut)
+		if err != nil {
+			continue
+		}
+		if st.Size() <= 512*KiB {
+			log.Infof("IMToWebpTGStatic: compressed to %d bytes at quality=%s", st.Size(), q)
+			return pathOut, nil
+		}
+	}
+
+	log.Warnf("IMToWebpTGStatic: could not compress below 512KB, returning best effort (%d bytes)", st.Size())
+	return pathOut, nil
 }
 
 // Convert image to static Webp for Whatsapp, size limit is 100KiB.

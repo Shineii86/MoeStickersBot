@@ -319,14 +319,49 @@ func gifToAnimatedWebp(in string, out string) error {
 }
 
 // convertKakaoStatic converts a static Kakao sticker to 512x512 WebP for Telegram.
+// Telegram static stickers must be ≤512KB. Uses lossy compression with quality fallback.
 func convertKakaoStatic(f string) (string, error) {
 	outFile := strings.TrimSuffix(f, filepath.Ext(f)) + ".webp"
+
+	// Try lossless first (best quality, but may be too large)
 	cmd := exec.Command("convert", f, "-resize", "512x512", "-filter", "Lanczos", "-define", "webp:lossless=true", outFile)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Warnf("convertKakaoStatic failed: %s", string(out))
+		log.Warnf("convertKakaoStatic lossless failed: %s", string(out))
 		return "", err
 	}
+
+	// Check file size — Telegram limit is 512KB for static stickers
+	st, err := os.Stat(outFile)
+	if err != nil {
+		return "", err
+	}
+	if st.Size() <= 512*1024 {
+		return outFile, nil
+	}
+
+	// File too big — fall back to lossy compression with decreasing quality
+	log.Warnf("convertKakaoStatic: lossless webp too large (%d bytes), trying lossy compression", st.Size())
+	qualities := []string{"90", "80", "70", "60", "50"}
+	for _, q := range qualities {
+		cmd = exec.Command("convert", f, "-resize", "512x512", "-filter", "Lanczos",
+			"-define", "webp:quality="+q, outFile)
+		out, err = cmd.CombinedOutput()
+		if err != nil {
+			log.Warnf("convertKakaoStatic quality=%s failed: %s", q, string(out))
+			continue
+		}
+		st, err = os.Stat(outFile)
+		if err != nil {
+			continue
+		}
+		if st.Size() <= 512*1024 {
+			log.Infof("convertKakaoStatic: compressed to %d bytes at quality=%s", st.Size(), q)
+			return outFile, nil
+		}
+	}
+
+	log.Warnf("convertKakaoStatic: could not compress below 512KB, returning best effort (%d bytes)", st.Size())
 	return outFile, nil
 }
 

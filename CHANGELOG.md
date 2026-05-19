@@ -1,3 +1,11 @@
+## [1.0.7] - 2026-05-20
+
+### Fixed
+- Fixed "file is too big (400)" error when importing Kakao stickers to Telegram
+- `convertKakaoStatic()` now uses lossy WebP compression with quality fallback (90→50) instead of lossless-only, ensuring files stay within Telegram's 512KB static sticker limit
+- `IMToWebpTGStatic()` now validates against 512KB limit and applies progressive lossy compression fallback instead of a single lossless re-encode
+- Both functions log compression quality and final file size for debugging
+
 ## [1.0.6] - 2025-02-15
 
 ### Fixed
