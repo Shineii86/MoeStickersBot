@@ -1,3 +1,9 @@
+## [1.0.9] - 2026-05-20
+
+### Changed
+- Rewrote README.md: removed Colab references, fixed broken links, added proper credit to original repo ([star-39/moe-sticker-bot](https://github.com/star-39/moe-sticker-bot))
+- Added Quick Start guide, dependency table, and commands reference to README
+
 ## [1.0.8] - 2026-05-20
 
 ### Security
