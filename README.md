@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > • **Use The Original Repository For Production**  
 > • This Colab Notebook Is A **Personal Customization** Designed For Easy Testing And Short‑term Self‑hosting In Google Colab.  
-> • For 24/7 Deployments, Contributions, Or Full Feature Support (Including WebApp), Please Refer To The [Original Moe-Sticker-Bot Repository](https://github.com/star-39/moe-sticker-bot).
+> • For 24/7 Deployments, Contributions, Or Full Feature Support (Including WebApp), Please Refer To The Original [Moe-Sticker-Bot](https://github.com/star-39/moe-sticker-bot) Repository.
 
 <div align="center">
 
@@ -14,8 +14,14 @@
 
 [![Original Repo](https://img.shields.io/badge/Original-Star--39%2FMoe--Sticker--Bot-181717?style=flat&logo=github)](https://github.com/star-39/moe-sticker-bot)
 
+[![Open in Colab](https://img.shields.io/badge/Google-Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=black)](https://colab.research.google.com/github/Shineii86/MoeStickerBot)
+
 [![GitHub Stars](https://img.shields.io/github/stars/Shineii86/MoeStickersBot?style=for-the-badge&color=FFB6C1)](https://github.com/Shineii86/MoeStickersBot/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/Shineii86/MoeStickersBot?style=for-the-badge&color=FF6B9D)](https://github.com/Shineii86/MoeStickersBot/fork)
+
+[![GitHub issues](https://img.shields.io/github/issues/Shineii86/MoeStickersBot?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Shineii86/MoeStickersBot/issues)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Shineii86/MoeStickersBot?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Shineii86/MoeStickersBot/commits/main)
+[![GitHub repo size](https://img.shields.io/github/repo-size/Shineii86/MoeStickersBot?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Shineii86/MoeStickersBot)
 
 **Use [MoeStickerBot](https://t.me/MoeStickerBot), a Telegram bot, to easily import or download LINE/Kakaotalk/Telegram stickers, use your own image or video to create Telegram sticker set or CustomEmoji and manage it.**
 
@@ -41,7 +47,45 @@
 <i><p>Get daily sticker packs, updates, and exclusive content!</p></i>
 
 </div>
-<br>
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+<table>
+<tr>
+<td width="33%" align="center">
+
+### 🐛 Report Bugs
+[Open an Issue](https://github.com/Shineii86/ZImageUpscaler/issues)
+
+</td>
+<td width="33%" align="center">
+
+### 💡 Suggest Features
+[Start a Discussion](https://github.com/Shineii86/ZImageUpscaler/issues)
+
+</td>
+<td width="33%" align="center">
+
+### 🔀 Submit PRs
+[Fork & Submit](https://github.com/Shineii86/ZImageUpscaler/fork)
+
+</td>
+</tr>
+</table>
+
+---
+
+## 📜 License
+
+<div align="center">
+
+This project is licensed under the **GPL-3.0 license**.
+
+</div>
 
 ---
 
@@ -49,7 +93,7 @@
 
 ### 🌟 Original Project
 
-This notebook is built upon the incredible work of **[Star-39](https://github.com/Star-39)** and all contributors to **[MoeStickersBot](https://github.com/Shineii86/MoeStickersBot)**. Please show them some love!
+This notebook is built upon the incredible work of **[Star-39](https://github.com/Star-39/Moe-Sticker-Bot)** and all contributors to **[Moe-Sticker-Bot](https://github.com/Shineii86/MoeStickersBot)**. Please show them some love!
 
 ### 📓 Colab Notebook Author
 
@@ -58,21 +102,24 @@ If you find this notebook helpful, consider giving it a ⭐ and following for mo
 
 ---
 
-<div align="center">
-
 ### 💕 Support the Projects
 
-⭐ **[Give a star to Shineii86/MoeStickersBot](https://github.com/Shineii86/MoeStickersBot)**  
+⭐ **[Give a star to this Project](https://github.com/Shineii86/MoeStickersBot)**  
 ⭐ **[Give a star to Colab notebook](https://github.com/Shineii86/MoeStickerBot)**
 
 <br>
 
-<a href="https://github.com/Shineii86">
-  <img src="https://img.shields.io/badge/Follow-@Shineii86-181717?style=for-the-badge&logo=github" alt="Follow Shineii86">
+<div align="center">
+  
+<a href="https://github.com/Shineii86/ZImageUpscaler">
+<img src="https://github.com/Shineii86/AniPay/blob/main/Source/Banner6.png" alt="Banner">
 </a>
-<a href="https://telegram.me/Shineii86">
-  <img src="https://img.shields.io/badge/Telegram-@Shineii86-2CA5E0?style=for-the-badge&logo=telegram" alt="Telegram">
-</a>
+
+<i>~ for inquiries or collaborations</i>
+     
+[![Telegram Badge](https://img.shields.io/badge/-Telegram-2CA5E0?style=for-the-badge&logo=Telegram&logoColor=white)](https://telegram.me/Shineii86 "Contact on Telegram")
+[![Instagram Badge](https://img.shields.io/badge/-Instagram-C13584?style=for-the-badge&logo=Instagram&logoColor=white)](https://instagram.com/ikx7.a "Follow on Instagram")
+[![Gmail Badge](https://img.shields.io/badge/-Gmail-D14836?style=for-the-badge&logo=Gmail&logoColor=white)](mailto:ikx7a@hotmail.com "Send an Email")
 
 <img src="https://capsule-render.vercel.app/api?type=waving&height=150&color=gradient&fontAlignY=30&section=footer">
 
