@@ -245,7 +245,11 @@ func prepareKakaoStickers(ctx context.Context, ld *LineData, workDir string, nee
 			}
 			if err != nil {
 				log.Warnf("Conversion failed for %s: %v", f, err)
-				cf = f // Use original if conversion fails
+				ld.Files[i].OriginalFile = f
+				ld.Files[i].ConvertedFile = ""
+				ld.Files[i].CError = err
+				ld.Files[i].Wg.Done()
+				continue
 			}
 
 			ld.Files[i].OriginalFile = f
@@ -333,7 +337,10 @@ func convertKakaoAnimated(f string) (string, error) {
 		outFile := strings.TrimSuffix(f, ext) + ".webp"
 		err := gifToAnimatedWebp(f, outFile)
 		if err != nil {
-			return f, err
+			return "", fmt.Errorf("convertKakaoAnimated: gif->webp failed: %w", err)
+		}
+		if wi, err := os.Stat(outFile); err != nil || wi.Size() == 0 {
+			return "", errors.New("convertKakaoAnimated: animated WebP conversion produced empty file")
 		}
 		return outFile, nil
 	case ".webp":
@@ -346,19 +353,30 @@ func convertKakaoAnimated(f string) (string, error) {
 		cmd := exec.Command(CONVERT_BIN, args...)
 		if err := cmd.Run(); err != nil {
 			log.Warnf("convertKakaoAnimated webp->gif failed: %v", err)
-			return f, nil
+			return "", fmt.Errorf("convertKakaoAnimated: webp->gif failed: %w", err)
+		}
+		// Verify GIF was created and is non-empty
+		if gi, err := os.Stat(gifFile); err != nil || gi.Size() == 0 {
+			log.Warnf("convertKakaoAnimated: GIF file missing or empty: %s", gifFile)
+			return "", errors.New("convertKakaoAnimated: GIF conversion produced empty file")
 		}
 		// Step 2: GIF → WebM via ffmpeg
 		cmd = exec.Command("ffmpeg", "-i", gifFile, "-vf", "scale=512:512:force_original_aspect_ratio=decrease",
 			"-pix_fmt", "yuva420p", "-c:v", "libvpx-vp9", "-cpu-used", "5",
 			"-minrate", "50k", "-b:v", "200k", "-maxrate", "300k",
 			"-to", "00:00:03", "-an", "-y", outFile)
-		if err := cmd.Run(); err != nil {
-			log.Warnf("convertKakaoAnimated gif->webm failed: %v", err)
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			log.Warnf("convertKakaoAnimated gif->webm failed: %v\n%s", err, string(out))
 			os.Remove(gifFile)
-			return f, nil
+			return "", fmt.Errorf("convertKakaoAnimated: gif->webm failed: %w", err)
 		}
 		os.Remove(gifFile)
+		// Verify WebM was created and is non-empty
+		if wi, err := os.Stat(outFile); err != nil || wi.Size() == 0 {
+			log.Warnf("convertKakaoAnimated: WebM file missing or empty: %s", outFile)
+			return "", errors.New("convertKakaoAnimated: WebM conversion produced empty file")
+		}
 		return outFile, nil
 	case ".webm":
 		// Convert WebM to GIF first, then to animated WebP

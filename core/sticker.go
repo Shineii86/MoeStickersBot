@@ -67,6 +67,13 @@ func submitStickerSetAuto(createSet bool, c tele.Context) error {
 	for index, sf := range ud.stickerData.stickers {
 		var err error
 
+		//Skip stickers that failed conversion (empty cPath and no fileID).
+		if sf.cPath == "" && sf.fileID == "" {
+			log.Warnf("Skipping sticker %d: conversion failed (empty cPath)", index)
+			errorCount += 1
+			continue
+		}
+
 		//Sticker set already finished.
 		if batchCreateSuccess && len(ud.stickerData.stickers) < 51 {
 			go editProgressMsg(len(ud.stickerData.stickers), len(ud.stickerData.stickers), "", pText, teleMsg, c)
