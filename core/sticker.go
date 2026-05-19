@@ -272,6 +272,13 @@ func createStickerSetBatch(sfs []*StickerFile, c tele.Context, name string, titl
 	for i, sf := range sfs {
 		sf.wg.Wait()
 		file := sf.cPath
+
+		// Skip stickers that failed conversion
+		if file == "" && sf.fileID == "" {
+			log.Warnf("createStickerSetBatch: skipping sticker %d (empty cPath)", i)
+			continue
+		}
+
 		input := tele.InputSticker{
 			Emojis:   sf.emojis,
 			Keywords: sf.keywords,
