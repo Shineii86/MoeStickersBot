@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -224,9 +225,13 @@ func prepareKakaoStickers(ctx context.Context, ld *LineData, workDir string, nee
 				f = newF
 			}
 
-			// Detect if this is actually animated (GIF/WebM), not just from API metadata
+			// Detect if this is actually animated (GIF/WebM/animated WebP), not just from API metadata
 			actualExt := filepath.Ext(f)
 			isAnimatedFile := actualExt == ".gif" || actualExt == ".webm"
+			// WebP can be animated — check frame count with ImageMagick
+			if actualExt == ".webp" && !isAnimatedFile {
+				isAnimatedFile = isAnimatedWebP(f)
+			}
 
 			// Convert to Telegram-compatible format (512x512 WebP)
 			var cf string
@@ -253,6 +258,19 @@ func prepareKakaoStickers(ctx context.Context, ld *LineData, workDir string, nee
 		log.Debug("Done process ALL kakao emoticons")
 	}()
 	return nil
+}
+
+// isAnimatedWebP checks if a WebP file contains multiple frames (animated).
+func isAnimatedWebP(f string) bool {
+	out, err := exec.Command("identify", "-format", "%n", f).CombinedOutput()
+	if err != nil {
+		return false
+	}
+	frameCount, err := strconv.Atoi(strings.TrimSpace(string(out)))
+	if err != nil {
+		return false
+	}
+	return frameCount > 1
 }
 
 // detectFileExtension reads magic bytes to determine file type.
@@ -291,8 +309,15 @@ func convertKakaoAnimated(f string) (string, error) {
 		}
 		return outFile, nil
 	case ".webp":
-		// Already WebP, use as-is
-		return f, nil
+		// Animated WebP — re-encode to ensure 512x512 and proper format
+		outFile := strings.TrimSuffix(f, ext) + ".webp"
+		cmd := exec.Command("ffmpeg", "-i", f, "-vf", "scale=512:512:force_original_aspect_ratio=decrease", "-loop", "0", "-compression_level", "4", "-quality", "80", "-y", outFile)
+		if err := cmd.Run(); err != nil {
+			// If ffmpeg fails, use original
+			log.Warnf("convertKakaoAnimated webp re-encode failed, using original: %v", err)
+			return f, nil
+		}
+		return outFile, nil
 	case ".webm":
 		// Convert WebM to GIF first, then to animated WebP
 		gifFile := strings.TrimSuffix(f, ext) + ".gif"

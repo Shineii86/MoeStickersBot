@@ -304,7 +304,16 @@ func checkGnerateSIDFromLID(ld *msbimport.LineData) string {
 func guessInputStickerFormat(f string) string {
 	if strings.HasSuffix(f, ".webm") {
 		return "video"
-	} else {
-		return "static"
 	}
+	// Animated WebP files should be treated as video stickers
+	if strings.HasSuffix(f, ".webp") {
+		out, err := exec.Command("identify", "-format", "%n", f).CombinedOutput()
+		if err == nil {
+			frameCount, err := strconv.Atoi(strings.TrimSpace(string(out)))
+			if err == nil && frameCount > 1 {
+				return "video"
+			}
+		}
+	}
+	return "static"
 }
