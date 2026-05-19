@@ -123,14 +123,17 @@ func IMToWebpTGStatic(f string, isCustomEmoji bool) (string, error) {
 	}
 
 	// File too big — fall back to lossy compression with decreasing quality
+	// Remove the oversized lossless file first to avoid ImageMagick conflicts
+	os.Remove(pathOut)
 	log.Warnf("IMToWebpTGStatic: lossless webp too large (%d bytes), trying lossy compression", st.Size())
 	qualities := []string{"90", "80", "70", "60", "50"}
 	for _, q := range qualities {
 		args = append(CONVERT_ARGS, "-resize", "512x512", "-filter", "Lanczos",
-			"-define", "webp:quality="+q, f+"[0]", pathOut)
+			"-quality", q, f+"[0]", pathOut)
 		out, err = exec.Command(bin, args...).CombinedOutput()
 		if err != nil {
 			log.Warnln("IMToWebpTGStatic quality fallback ERROR:", string(out))
+			os.Remove(pathOut)
 			continue
 		}
 		st, err = os.Stat(pathOut)
@@ -141,9 +144,13 @@ func IMToWebpTGStatic(f string, isCustomEmoji bool) (string, error) {
 			log.Infof("IMToWebpTGStatic: compressed to %d bytes at quality=%s", st.Size(), q)
 			return pathOut, nil
 		}
+		os.Remove(pathOut)
 	}
 
-	log.Warnf("IMToWebpTGStatic: could not compress below 512KB, returning best effort (%d bytes)", st.Size())
+	// Last resort: re-encode at lowest quality
+	args = append(CONVERT_ARGS, "-resize", "512x512", "-filter", "Lanczos", "-quality", "40", f+"[0]", pathOut)
+	exec.Command(bin, args...).CombinedOutput()
+	log.Warnf("IMToWebpTGStatic: could not compress below 512KB, returning best effort")
 	return pathOut, nil
 }
 

@@ -324,7 +324,7 @@ func convertKakaoStatic(f string) (string, error) {
 	outFile := strings.TrimSuffix(f, filepath.Ext(f)) + ".webp"
 
 	// Try lossless first (best quality, but may be too large)
-	cmd := exec.Command("convert", f, "-resize", "512x512", "-filter", "Lanczos", "-define", "webp:lossless=true", outFile)
+	cmd := exec.Command("convert", f+"[0]", "-resize", "512x512", "-filter", "Lanczos", "-define", "webp:lossless=true", outFile)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Warnf("convertKakaoStatic lossless failed: %s", string(out))
@@ -341,14 +341,17 @@ func convertKakaoStatic(f string) (string, error) {
 	}
 
 	// File too big — fall back to lossy compression with decreasing quality
+	// Remove the oversized lossless file first to avoid ImageMagick conflicts
+	os.Remove(outFile)
 	log.Warnf("convertKakaoStatic: lossless webp too large (%d bytes), trying lossy compression", st.Size())
 	qualities := []string{"90", "80", "70", "60", "50"}
 	for _, q := range qualities {
-		cmd = exec.Command("convert", f, "-resize", "512x512", "-filter", "Lanczos",
-			"-define", "webp:quality="+q, outFile)
+		cmd = exec.Command("convert", f+"[0]", "-resize", "512x512", "-filter", "Lanczos",
+			"-quality", q, outFile)
 		out, err = cmd.CombinedOutput()
 		if err != nil {
 			log.Warnf("convertKakaoStatic quality=%s failed: %s", q, string(out))
+			os.Remove(outFile)
 			continue
 		}
 		st, err = os.Stat(outFile)
@@ -359,9 +362,14 @@ func convertKakaoStatic(f string) (string, error) {
 			log.Infof("convertKakaoStatic: compressed to %d bytes at quality=%s", st.Size(), q)
 			return outFile, nil
 		}
+		// Remove oversized file before next attempt
+		os.Remove(outFile)
 	}
 
-	log.Warnf("convertKakaoStatic: could not compress below 512KB, returning best effort (%d bytes)", st.Size())
+	log.Warnf("convertKakaoStatic: could not compress below 512KB, returning best effort")
+	// Last resort: re-encode at lowest quality
+	cmd = exec.Command("convert", f+"[0]", "-resize", "512x512", "-filter", "Lanczos", "-quality", "40", outFile)
+	cmd.CombinedOutput()
 	return outFile, nil
 }
 
