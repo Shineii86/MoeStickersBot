@@ -1,6 +1,11 @@
-import React from 'react';
+/**
+ * StickerGrid - responsive grid layout for sticker display.
+ */
 
-export function StickerGrid({children, columns}) {
+import React from 'react';
+import { GRID_COLUMNS } from '../../constants';
+
+export function StickerGrid({ children, columns = GRID_COLUMNS }) {
   return (
     <ul
       style={{
@@ -9,7 +14,6 @@ export function StickerGrid({children, columns}) {
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
         gridGap: 10,
         padding: 10,
-        
       }}
     >
       {children}

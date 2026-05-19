@@ -1,3 +1,21 @@
+## [1.1.0] - 2026-05-20
+
+### Changed
+- Modularized WebApp (`web/webapp3/src/`) into proper directory structure:
+  - `api/` — centralized API request helpers (`stickerApi.js`)
+  - `components/` — reusable UI components (`Sticker`, `SortableSticker`, `StickerGrid`, `ErrorMessage`)
+  - `hooks/` — custom React hooks (`useTelegramInit` for initData validation and platform detection)
+  - `pages/` — route-level page components (`Edit`, `Export`)
+  - `constants/` — app-wide configuration constants (grid columns, drag delay, sticker size, etc.)
+  - `styles/` — CSS files (`global.css`, `sticker.css`)
+  - `utils/` — utility functions (`sha256sum`)
+  - `assets/` — static assets (`loading.gif`)
+- Extracted Telegram WebApp logic into reusable `useTelegramInit` hook
+- Moved all API calls from inline axios usage into dedicated `stickerApi.js` module
+- Replaced magic numbers with named constants from `constants/index.js`
+- Improved component props: `Sticker` now conditionally renders emoji input, `ErrorMessage` supports flexible layout
+- Updated WebApp README with project structure diagram, tech stack, and route table
+
 ## [1.0.9] - 2026-05-20
 
 ### Changed

@@ -1,7 +1,11 @@
-import {useSortable} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
+/**
+ * SortableSticker - wraps Sticker with dnd-kit sortable behavior.
+ */
 
-import {Sticker} from './Sticker';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Sticker } from './Sticker';
+import { DRAG_DELAY, DRAG_TOLERANCE } from '../../constants';
 
 export function SortableSticker(props) {
   const {
@@ -10,7 +14,10 @@ export function SortableSticker(props) {
     setNodeRef,
     transform,
     transition,
-  } = useSortable({id: props.id}); //id CANNOT be set to 0 !!!
+  } = useSortable({
+    id: props.id,
+    // id CANNOT be set to 0 !!!
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -26,4 +33,4 @@ export function SortableSticker(props) {
       {...listeners}
     />
   );
-};
+}
