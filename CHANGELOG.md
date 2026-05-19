@@ -5,6 +5,9 @@
 - Removed bot token from initialization log output to prevent credential leakage in log files
 
 ### Fixed
+- Fixed animated Kakao stickers being imported as static: `isAnimatedWebP()` failed silently when ImageMagick (`identify`) was not installed, causing animated WebP files to be treated as static
+- Added pure-Go `webpHasAnimChunk()` fallback that detects animated WebP by checking for the `ANIM` chunk in the file header — works without any external dependencies
+- Applied same animated WebP detection fix to `guessInputStickerFormat()` in core, so Telegram correctly classifies animated WebP as video stickers
 - Fixed hardcoded `convert` binary path in `convertKakaoAnimated()` and `convertKakaoStatic()`: now uses the platform-aware `CONVERT_BIN` and `CONVERT_ARGS` variables, ensuring macOS (`magick`) compatibility
 - Properly copies `CONVERT_ARGS` slice before appending to avoid mutating the global variable across concurrent calls
 

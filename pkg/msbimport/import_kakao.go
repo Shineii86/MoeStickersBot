@@ -263,21 +263,42 @@ func prepareKakaoStickers(ctx context.Context, ld *LineData, workDir string, nee
 // isAnimatedWebP checks if a WebP file contains multiple frames (animated).
 func isAnimatedWebP(f string) bool {
 	out, err := exec.Command("identify", "-format", "%n ", f).CombinedOutput()
+	if err == nil {
+		// identify outputs frame count for EACH frame separated by spaces
+		// e.g., "14 14 14 14..." for 14 frames. Parse only the first token.
+		outStr := strings.TrimSpace(string(out))
+		parts := strings.Fields(outStr)
+		if len(parts) > 0 {
+			frameCount, err := strconv.Atoi(parts[0])
+			if err == nil {
+				return frameCount > 1
+			}
+		}
+	}
+
+	// Fallback: check for ANIM chunk in WebP header (works without ImageMagick)
+	return webpHasAnimChunk(f)
+}
+
+// webpHasAnimChunk reads the WebP file header and checks for the ANIM chunk,
+// which is always present in animated WebP files per the spec.
+func webpHasAnimChunk(f string) bool {
+	data, err := os.ReadFile(f)
 	if err != nil {
 		return false
 	}
-	// identify outputs frame count for EACH frame separated by spaces
-	// e.g., "14 14 14 14..." for 14 frames. Parse only the first token.
-	outStr := strings.TrimSpace(string(out))
-	parts := strings.Fields(outStr)
-	if len(parts) == 0 {
+	// WebP file must start with "RIFF" and contain "WEBP"
+	if len(data) < 20 || string(data[0:4]) != "RIFF" || string(data[8:12]) != "WEBP" {
 		return false
 	}
-	frameCount, err := strconv.Atoi(parts[0])
-	if err != nil {
-		return false
+	// Search for ANIM chunk in the file header area
+	// ANIM chunk appears early in the file, typically within the first 30 bytes
+	for i := 12; i < len(data)-4; i++ {
+		if string(data[i:i+4]) == "ANIM" {
+			return true
+		}
 	}
-	return frameCount > 1
+	return false
 }
 
 // detectFileExtension reads magic bytes to determine file type.

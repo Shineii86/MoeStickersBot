@@ -299,6 +299,24 @@ func checkGnerateSIDFromLID(ld *msbimport.LineData) string {
 // 	// }
 // }
 
+// webpHasAnimChunk reads the WebP file header and checks for the ANIM chunk,
+// which is always present in animated WebP files per the spec.
+func webpHasAnimChunk(f string) bool {
+	data, err := os.ReadFile(f)
+	if err != nil {
+		return false
+	}
+	if len(data) < 20 || string(data[0:4]) != "RIFF" || string(data[8:12]) != "WEBP" {
+		return false
+	}
+	for i := 12; i < len(data)-4; i++ {
+		if string(data[i:i+4]) == "ANIM" {
+			return true
+		}
+	}
+	return false
+}
+
 // To comply with new InputSticker requirement on format,
 // guess format based on file extension.
 func guessInputStickerFormat(f string) string {
@@ -316,6 +334,10 @@ func guessInputStickerFormat(f string) string {
 					return "video"
 				}
 			}
+		}
+		// Fallback: check for ANIM chunk in WebP header
+		if webpHasAnimChunk(f) {
+			return "video"
 		}
 	}
 	return "static"
