@@ -147,7 +147,7 @@ func initBot(conf ConfigTemplate) *tele.Bot {
 		// onError will terminate current session and log to terminal.
 		OnError: onError,
 	}
-	log.WithField("token", msbconf.BotToken).Info("Attempting to initialize...")
+	log.Info("Attempting to initialize...")
 	b, err := tele.NewBot(pref)
 	if err != nil {
 		log.Fatal(err)

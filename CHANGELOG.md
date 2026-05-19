@@ -1,3 +1,13 @@
+## [1.0.8] - 2026-05-20
+
+### Security
+- Fixed SQL injection vulnerability in `searchLineS()`: user-supplied keywords were directly concatenated into SQL query strings; now uses parameterized queries with `?` placeholders
+- Removed bot token from initialization log output to prevent credential leakage in log files
+
+### Fixed
+- Fixed hardcoded `convert` binary path in `convertKakaoAnimated()` and `convertKakaoStatic()`: now uses the platform-aware `CONVERT_BIN` and `CONVERT_ARGS` variables, ensuring macOS (`magick`) compatibility
+- Properly copies `CONVERT_ARGS` slice before appending to avoid mutating the global variable across concurrent calls
+
 ## [1.0.7] - 2026-05-20
 
 ### Fixed

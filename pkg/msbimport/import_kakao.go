@@ -320,7 +320,9 @@ func convertKakaoAnimated(f string) (string, error) {
 		gifFile := strings.TrimSuffix(f, ext) + ".gif"
 		outFile := strings.TrimSuffix(f, ext) + ".webm"
 		// Step 1: animated WebP → GIF via ImageMagick
-		cmd := exec.Command("convert", f, "-coalesce", gifFile)
+		args := append([]string{}, CONVERT_ARGS...)
+		args = append(args, f, "-coalesce", gifFile)
+		cmd := exec.Command(CONVERT_BIN, args...)
 		if err := cmd.Run(); err != nil {
 			log.Warnf("convertKakaoAnimated webp->gif failed: %v", err)
 			return f, nil
@@ -368,7 +370,9 @@ func convertKakaoStatic(f string) (string, error) {
 	outFile := strings.TrimSuffix(f, filepath.Ext(f)) + ".webp"
 
 	// Try lossless first (best quality, but may be too large)
-	cmd := exec.Command("convert", f+"[0]", "-resize", "512x512", "-filter", "Lanczos", "-define", "webp:lossless=true", outFile)
+	args := append([]string{}, CONVERT_ARGS...)
+	args = append(args, f+"[0]", "-resize", "512x512", "-filter", "Lanczos", "-define", "webp:lossless=true", outFile)
+	cmd := exec.Command(CONVERT_BIN, args...)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Warnf("convertKakaoStatic lossless failed: %s", string(out))
@@ -390,8 +394,10 @@ func convertKakaoStatic(f string) (string, error) {
 	log.Warnf("convertKakaoStatic: lossless webp too large (%d bytes), trying lossy compression", st.Size())
 	qualities := []string{"90", "80", "70", "60", "50"}
 	for _, q := range qualities {
-		cmd = exec.Command("convert", f+"[0]", "-resize", "512x512", "-filter", "Lanczos",
+		qArgs := append([]string{}, CONVERT_ARGS...)
+		qArgs = append(qArgs, f+"[0]", "-resize", "512x512", "-filter", "Lanczos",
 			"-quality", q, outFile)
+		cmd = exec.Command(CONVERT_BIN, qArgs...)
 		out, err = cmd.CombinedOutput()
 		if err != nil {
 			log.Warnf("convertKakaoStatic quality=%s failed: %s", q, string(out))
@@ -412,7 +418,9 @@ func convertKakaoStatic(f string) (string, error) {
 
 	log.Warnf("convertKakaoStatic: could not compress below 512KB, returning best effort")
 	// Last resort: re-encode at lowest quality
-	cmd = exec.Command("convert", f+"[0]", "-resize", "512x512", "-filter", "Lanczos", "-quality", "40", outFile)
+	lastArgs := append([]string{}, CONVERT_ARGS...)
+	lastArgs = append(lastArgs, f+"[0]", "-resize", "512x512", "-filter", "Lanczos", "-quality", "40", outFile)
+	cmd = exec.Command(CONVERT_BIN, lastArgs...)
 	cmd.CombinedOutput()
 	return outFile, nil
 }
