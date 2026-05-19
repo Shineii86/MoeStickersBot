@@ -206,6 +206,14 @@ func confirmImport(c tele.Context, wantEmoji bool) error {
 		ud.stickerData.stickers[i].oPath = lf.OriginalFile
 		ud.stickerData.stickers[i].cPath = lf.ConvertedFile
 	}
+
+	// Re-check IsAnimated after all files are downloaded (goroutine may have set it to true)
+	ud.stickerData.isVideo = ud.lineData.IsAnimated
+	if ud.lineData.IsAnimated {
+		ud.stickerData.stickerSetType = tele.StickerRegular
+		log.Debugf("Detected animated sticker set, isVideo=true")
+	}
+
 	return nil
 }
 
