@@ -5,6 +5,11 @@
 - `convertKakaoStatic()` now uses lossy WebP compression with quality fallback (90→50) instead of lossless-only, ensuring files stay within Telegram's 512KB static sticker limit
 - `IMToWebpTGStatic()` now validates against 512KB limit and applies progressive lossy compression fallback instead of a single lossless re-encode
 - Both functions log compression quality and final file size for debugging
+- Fixed ImageMagick WebP conversion failures: remove oversized files before retry, use `-quality` flag instead of `-define webp:quality`, add `[0]` frame selector to prevent animated write errors
+- Added last-resort quality=40 fallback before giving up
+
+### Verified
+- Successfully imported 24-sticker Kakao pack (힐링곰의 따수운 존대말톡) — all files under 512KB, batch creation passed
 
 ## [1.0.6] - 2025-02-15
 
