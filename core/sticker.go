@@ -219,7 +219,13 @@ func createStickerSet(safeMode bool, sf *StickerFile, c tele.Context, name strin
 	sf.wg.Wait()
 
 	if safeMode {
-		file, _ = msbimport.FFToWebmSafe(sf.oPath, isCustomEmoji)
+		// Use the already-converted file (cPath) for re-encoding, not the original (oPath).
+		// The original may be in a format ffmpeg can't decode (e.g., animated WebP).
+		sourceFile := sf.cPath
+		if sourceFile == "" {
+			sourceFile = sf.oPath
+		}
+		file, _ = msbimport.FFToWebmSafe(sourceFile, isCustomEmoji)
 	} else {
 		file = sf.cPath
 	}
@@ -317,7 +323,11 @@ func commitSingleticker(pos int, flCount *int, safeMode bool, sf *StickerFile, c
 	sf.wg.Wait()
 
 	if safeMode {
-		file, _ = msbimport.FFToWebmSafe(sf.oPath, isCustomEmoji)
+		sourceFile := sf.cPath
+		if sourceFile == "" {
+			sourceFile = sf.oPath
+		}
+		file, _ = msbimport.FFToWebmSafe(sourceFile, isCustomEmoji)
 	} else {
 		file = sf.cPath
 	}
