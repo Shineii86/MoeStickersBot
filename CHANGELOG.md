@@ -1,3 +1,14 @@
+## [1.1.1] - 2026-05-20
+
+### Added
+- TERMUX.md: Added complete WebApp deployment guide for Termux (Steps W1–W8)
+  - nginx reverse proxy setup for serving React build and proxying API to bot
+  - ngrok tunnel configuration for HTTPS (required by Telegram WebApps)
+  - Self-signed SSL certificate generation for nginx
+  - WebApp build instructions with `REACT_APP_HOST` configuration
+  - Troubleshooting table for common WebApp issues on Termux
+  - Additional resource usage estimates for WebApp components
+
 ## [1.1.0] - 2026-05-20
 
 ### Changed

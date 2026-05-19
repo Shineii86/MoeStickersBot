@@ -211,6 +211,212 @@ mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS moestickersbot;"
 
 ---
 
+## Optional: WebApp Setup (Sticker Manager)
+
+The WebApp gives you a visual drag-and-drop interface to reorder stickers and edit emoji assignments. It requires HTTPS since Telegram WebApps only work over secure connections.
+
+> **Note:** The bot works fully without the WebApp. This is optional — all sticker operations can be done via bot commands.
+
+### Architecture
+
+```
+Telegram WebApp (your phone)
+    ↓ HTTPS
+ngrok tunnel (public URL)
+    ↓ localhost:443
+nginx (reverse proxy)
+    ├── /webapp/edit   → React static files
+    ├── /webapp/export → React static files
+    └── /webapp/api/*  → MoeStickersBot (localhost:8080)
+```
+
+### W1. Install Additional Dependencies
+
+```bash
+pkg install nodejs nginx
+```
+
+### W2. Start the Bot with WebApp Enabled
+
+The bot must be running and listening for WebApp API requests:
+
+```bash
+cd ~/MoeStickersBot
+./MoeStickersBot --bot_token="YOUR_TOKEN" --log_level=info
+```
+
+Keep this running in one Termux session. Open a **new session** (swipe from left edge → "New Session") for the next steps.
+
+### W3. Build the React WebApp
+
+```bash
+cd ~/MoeStickersBot/web/webapp3
+
+# Install Node dependencies
+npm install
+
+# Build for production
+# Replace YOUR_DOMAIN with your ngrok URL (without https://)
+# You'll get this URL in step W5, so you can skip this step first
+# and come back after getting the ngrok URL
+REACT_APP_HOST=YOUR_DOMAIN.ngrok-free.app npm run build
+```
+
+This creates a `build/` folder with the compiled WebApp.
+
+### W4. Configure nginx
+
+Create the nginx config file:
+
+```bash
+mkdir -p ~/nginx-conf
+
+cat > ~/nginx-conf/webapp.conf << 'NGINX'
+worker_processes 1;
+pid /data/data/com.termux/files/usr/var/run/nginx.pid;
+
+events {
+    worker_connections 256;
+}
+
+http {
+    include /data/data/com.termux/files/usr/share/nginx/conf/mime.types;
+    default_type application/octet-stream;
+    sendfile on;
+    keepalive_timeout 65;
+
+    server {
+        listen 8443 ssl;
+        server_name _;
+
+        # ngrok handles SSL termination, so use self-signed certs as placeholder
+        ssl_certificate /data/data/com.termux/files/usr/etc/nginx/ssl/server.crt;
+        ssl_certificate_key /data/data/com.termux/files/usr/etc/nginx/ssl/server.key;
+
+        # Serve the built React app
+        location /webapp/edit {
+            alias /data/data/com.termux/files/home/MoeStickersBot/web/webapp3/build;
+            try_files $uri $uri/ /webapp/edit/index.html;
+        }
+
+        location /webapp/export {
+            alias /data/data/com.termux/files/home/MoeStickersBot/web/webapp3/build;
+            try_files $uri $uri/ /webapp/export/index.html;
+        }
+
+        location /webapp/static {
+            alias /data/data/com.termux/files/home/MoeStickersBot/web/webapp3/build/static;
+        }
+
+        # Proxy API requests to the Go bot
+        location /webapp/api {
+            proxy_pass http://127.0.0.1:8080/api;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+    }
+}
+NGINX
+```
+
+Generate self-signed SSL certificates (required by nginx even though ngrok handles real SSL):
+
+```bash
+mkdir -p /data/data/com.termux/files/usr/etc/nginx/ssl
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /data/data/com.termux/files/usr/etc/nginx/ssl/server.key \
+  -out /data/data/com.termux/files/usr/etc/nginx/ssl/server.crt \
+  -subj "/CN=localhost"
+```
+
+Test and start nginx:
+
+```bash
+nginx -c ~/nginx-conf/webapp.conf -t
+nginx -c ~/nginx-conf/webapp.conf
+```
+
+### W5. Set Up ngrok for HTTPS
+
+Telegram WebApps require HTTPS. ngrok gives you a free public HTTPS URL that tunnels to your phone.
+
+1. Sign up at **https://ngrok.com** (free plan)
+2. Get your auth token from the ngrok dashboard
+3. Configure and run:
+
+```bash
+ngrok config add-authtoken YOUR_NGROK_AUTH_TOKEN
+
+# Start tunnel — forward HTTPS to nginx on port 8443
+ngrok http 8443
+```
+
+ngrok will display something like:
+
+```
+Forwarding  https://abcd1234.ngrok-free.app → http://localhost:8443
+```
+
+**Copy that `https://xxxx.ngrok-free.app` URL** — this is your WebApp's public address.
+
+### W6. Rebuild WebApp with Your Domain
+
+Now that you have the ngrok URL, rebuild the React app with the correct host:
+
+```bash
+cd ~/MoeStickersBot/web/webapp3
+
+# Replace with your actual ngrok URL (without https://)
+REACT_APP_HOST=abcd1234.ngrok-free.app npm run build
+
+# Reload nginx to pick up the new build
+nginx -s reload -c ~/nginx-conf/webapp.conf
+```
+
+### W7. Configure the Bot
+
+Set the WebApp URL in your bot so Telegram knows where to load the WebApp from. Check your bot's configuration for a `--webapp_url` or similar flag, or configure it via @BotFather:
+
+1. Open @BotFather
+2. Send `/setmenubutton`
+3. Select your bot
+4. Enter the WebApp URL: `https://abcd1234.ngrok-free.app/webapp/edit`
+
+### W8. Access the WebApp
+
+Open your bot in Telegram → tap the **menu button** (☰) → select **Manage Stickers**. The WebApp should open inside Telegram.
+
+### Stopping the WebApp
+
+```bash
+# Stop ngrok
+pkill ngrok
+
+# Stop nginx
+nginx -s stop -c ~/nginx-conf/webapp.conf
+```
+
+### WebApp Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| "Invalid WebApp initData" | Make sure you launched the WebApp via `/manage` command or menu button, not by opening the URL directly |
+| Blank page | Check if nginx is running: `pgrep nginx`. Check build exists: `ls ~/MoeStickersBot/web/webapp3/build/` |
+| API errors | Make sure the bot is running: `pgrep MoeStickersBot` |
+| ngrok "tunnel not found" | ngrok free tunnels expire. Restart `ngrok http 8443` and rebuild with the new URL |
+| HTTPS error | Telegram requires HTTPS. Make sure you're using the ngrok `https://` URL, not `http://` |
+| npm install fails | Run `pkg update && pkg upgrade -y` and try again. If storage error: `go clean -cache && pkg clean` |
+
+### WebApp Resource Usage (Additional)
+
+| Resource | Extra Usage |
+|----------|------------|
+| **RAM** | +50 MB (nginx + node) |
+| **Storage** | +150 MB (node_modules + build) |
+| **Data** | Minimal (only when WebApp is open) |
+
+---
+
 ## Troubleshooting
 
 ### Bot gets killed after screen off
