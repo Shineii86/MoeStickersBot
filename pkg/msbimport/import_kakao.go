@@ -262,30 +262,18 @@ func prepareKakaoStickers(ctx context.Context, ld *LineData, workDir string, nee
 
 // isAnimatedWebP checks if a WebP file contains multiple frames (animated).
 func isAnimatedWebP(f string) bool {
-	out, err := exec.Command("identify", "-format", "%n", f).CombinedOutput()
+	out, err := exec.Command("identify", "-format", "%n ", f).CombinedOutput()
 	if err != nil {
 		return false
 	}
-	// identify outputs frame count for EACH frame (e.g., "14141414..." for 14 frames)
-	// Parse only the first number
+	// identify outputs frame count for EACH frame separated by spaces
+	// e.g., "14 14 14 14..." for 14 frames. Parse only the first token.
 	outStr := strings.TrimSpace(string(out))
-	if len(outStr) == 0 {
+	parts := strings.Fields(outStr)
+	if len(parts) == 0 {
 		return false
 	}
-	// Find the first non-digit or take first few chars
-	// Frame count is typically 1-3 digits
-	firstNum := ""
-	for _, c := range outStr {
-		if c >= '0' && c <= '9' {
-			firstNum += string(c)
-		} else {
-			break
-		}
-	}
-	if firstNum == "" {
-		return false
-	}
-	frameCount, err := strconv.Atoi(firstNum)
+	frameCount, err := strconv.Atoi(parts[0])
 	if err != nil {
 		return false
 	}

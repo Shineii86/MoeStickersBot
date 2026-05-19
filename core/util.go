@@ -307,19 +307,11 @@ func guessInputStickerFormat(f string) string {
 	}
 	// Animated WebP files should be treated as video stickers
 	if strings.HasSuffix(f, ".webp") {
-		out, err := exec.Command("identify", "-format", "%n", f).CombinedOutput()
+		out, err := exec.Command("identify", "-format", "%n ", f).CombinedOutput()
 		if err == nil {
-			outStr := strings.TrimSpace(string(out))
-			firstNum := ""
-			for _, c := range outStr {
-				if c >= '0' && c <= '9' {
-					firstNum += string(c)
-				} else {
-					break
-				}
-			}
-			if firstNum != "" {
-				frameCount, err := strconv.Atoi(firstNum)
+			parts := strings.Fields(strings.TrimSpace(string(out)))
+			if len(parts) > 0 {
+				frameCount, err := strconv.Atoi(parts[0])
 				if err == nil && frameCount > 1 {
 					return "video"
 				}
