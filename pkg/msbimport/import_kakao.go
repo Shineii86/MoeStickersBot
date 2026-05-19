@@ -266,7 +266,26 @@ func isAnimatedWebP(f string) bool {
 	if err != nil {
 		return false
 	}
-	frameCount, err := strconv.Atoi(strings.TrimSpace(string(out)))
+	// identify outputs frame count for EACH frame (e.g., "14141414..." for 14 frames)
+	// Parse only the first number
+	outStr := strings.TrimSpace(string(out))
+	if len(outStr) == 0 {
+		return false
+	}
+	// Find the first non-digit or take first few chars
+	// Frame count is typically 1-3 digits
+	firstNum := ""
+	for _, c := range outStr {
+		if c >= '0' && c <= '9' {
+			firstNum += string(c)
+		} else {
+			break
+		}
+	}
+	if firstNum == "" {
+		return false
+	}
+	frameCount, err := strconv.Atoi(firstNum)
 	if err != nil {
 		return false
 	}

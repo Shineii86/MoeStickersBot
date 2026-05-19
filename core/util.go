@@ -309,9 +309,20 @@ func guessInputStickerFormat(f string) string {
 	if strings.HasSuffix(f, ".webp") {
 		out, err := exec.Command("identify", "-format", "%n", f).CombinedOutput()
 		if err == nil {
-			frameCount, err := strconv.Atoi(strings.TrimSpace(string(out)))
-			if err == nil && frameCount > 1 {
-				return "video"
+			outStr := strings.TrimSpace(string(out))
+			firstNum := ""
+			for _, c := range outStr {
+				if c >= '0' && c <= '9' {
+					firstNum += string(c)
+				} else {
+					break
+				}
+			}
+			if firstNum != "" {
+				frameCount, err := strconv.Atoi(firstNum)
+				if err == nil && frameCount > 1 {
+					return "video"
+				}
 			}
 		}
 	}
