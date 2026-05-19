@@ -316,14 +316,26 @@ func convertKakaoAnimated(f string) (string, error) {
 		}
 		return outFile, nil
 	case ".webp":
-		// Animated WebP — re-encode to ensure 512x512 and proper format
-		outFile := strings.TrimSuffix(f, ext) + ".webp"
-		cmd := exec.Command("ffmpeg", "-i", f, "-vf", "scale=512:512:force_original_aspect_ratio=decrease", "-loop", "0", "-compression_level", "4", "-quality", "80", "-y", outFile)
+		// Animated WebP — ffmpeg can't decode animated WebP, so convert via GIF first
+		gifFile := strings.TrimSuffix(f, ext) + ".gif"
+		outFile := strings.TrimSuffix(f, ext) + ".webm"
+		// Step 1: animated WebP → GIF via ImageMagick
+		cmd := exec.Command("convert", f, "-coalesce", gifFile)
 		if err := cmd.Run(); err != nil {
-			// If ffmpeg fails, use original
-			log.Warnf("convertKakaoAnimated webp re-encode failed, using original: %v", err)
+			log.Warnf("convertKakaoAnimated webp->gif failed: %v", err)
 			return f, nil
 		}
+		// Step 2: GIF → WebM via ffmpeg
+		cmd = exec.Command("ffmpeg", "-i", gifFile, "-vf", "scale=512:512:force_original_aspect_ratio=decrease",
+			"-pix_fmt", "yuva420p", "-c:v", "libvpx-vp9", "-cpu-used", "5",
+			"-minrate", "50k", "-b:v", "200k", "-maxrate", "300k",
+			"-to", "00:00:03", "-an", "-y", outFile)
+		if err := cmd.Run(); err != nil {
+			log.Warnf("convertKakaoAnimated gif->webm failed: %v", err)
+			os.Remove(gifFile)
+			return f, nil
+		}
+		os.Remove(gifFile)
 		return outFile, nil
 	case ".webm":
 		// Convert WebM to GIF first, then to animated WebP
