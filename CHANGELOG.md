@@ -1,3 +1,15 @@
+## [1.1.2] - 2026-05-20
+
+### Added
+- `scripts/setup_mariadb.sh`: Automated MariaDB setup script for bot database
+  - Installs MariaDB server and client
+  - Creates database (`MoeStickersBot_db`), user (`moe_bot`), and grants
+  - Configurable root password, bot password, host, and port
+  - Verifies connection after setup
+- `scripts/setup_mariadb.sql`: Manual SQL setup script for reference
+  - Database and user creation with proper `utf8mb4` charset
+  - Table schemas commented out (bot auto-creates on first run)
+
 ## [1.1.1] - 2026-05-20
 
 ### Added
