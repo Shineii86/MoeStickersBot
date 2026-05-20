@@ -93,21 +93,6 @@ This project is licensed under the **GPL-3.0 license**.
 
 </div>
 
-
----
-
-## 📓 Google Colab Edition
-
-Want to run this bot for free without a VPS? Use the **Google Colab Edition** — one-click setup, no server needed.
-
-<p align="center">
-  <a href="https://github.com/Shineii86/MoeStickerBot">
-    <img src="https://img.shields.io/badge/📓_Colab_Edition-MoeStickerBot-FF6B9D?style=for-the-badge&logo=googlecolab" alt="Colab Edition">
-  </a>
-  <a href="https://colab.research.google.com/github/Shineii86/MoeStickerBot/blob/main/notebooks/MoeStickerBot.ipynb">
-    <img src="https://img.shields.io/badge/Open%20in%20Colab-Run_Now-FF6B9D?style=for-the-badge&logo=googlecolab" alt="Open in Colab">
-  </a>
-</p>
 ---
 
 ## 💕 Credits & Acknowledgments
