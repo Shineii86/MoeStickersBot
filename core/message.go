@@ -328,7 +328,7 @@ func sendAskTitle_Import(c tele.Context) error {
 	}
 
 	if len(titleButtons) == 0 {
-		btnDefault := selector.Data(escapeTagMark(ld.Title)+" by @MaximXStickers", CB_DEFAULT_TITLE)
+		btnDefault := selector.Data(escapeTagMark(ld.Title)+" ᯤ @MaximXStickers", CB_DEFAULT_TITLE)
 		titleButtons = []tele.Row{selector.Row(btnDefault)}
 	}
 	selector.Inline(titleButtons...)

@@ -432,9 +432,9 @@ func waitSTitle(c tele.Context) error {
 		}
 		titleIndex, atoiErr := strconv.Atoi(c.Callback().Data)
 		if atoiErr == nil && titleIndex != -1 {
-			ud.stickerData.title = ud.lineData.I18nTitles[titleIndex] + " by @MaximXStickers"
+			ud.stickerData.title = ud.lineData.I18nTitles[titleIndex] + " ᯤ @MaximXStickers"
 		} else {
-			ud.stickerData.title = ud.lineData.Title + " by @MaximXStickers"
+			ud.stickerData.title = ud.lineData.Title + " ᯤ @MaximXStickers"
 		}
 	}
 
