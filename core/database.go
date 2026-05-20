@@ -67,6 +67,7 @@ func initDB(dbname string) error {
 	pass := msbconf.DbPass
 	params := make(map[string]string)
 	params["autocommit"] = "1"
+	params["tls"] = "true"
 	dsn := &mysql.Config{
 		User:                 user,
 		Passwd:               pass,
