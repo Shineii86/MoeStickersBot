@@ -29,25 +29,22 @@ Want to run this bot for free without a VPS? Use the **Google Colab Edition** �
 
 <p align="center">
   <a href="https://github.com/Shineii86/MoeStickerBot">
-    <img src="https://img.shields.io/badge/📓_Colab_Edition-MoeStickerBot-FF6B9D?style=for-the-badge&logo=googlecolab" alt="Colab Edition">
-  </a>
-  <a href="https://colab.research.google.com/github/Shineii86/MoeStickerBot/blob/main/notebooks/MoeStickerBot.ipynb">
-    <img src="https://img.shields.io/badge/Open%20in%20Colab-Run_Now-FF6B9D?style=for-the-badge&logo=googlecolab" alt="Open in Colab">
+    <img src="https://img.shields.io/badge/Colab_Edition-MoeStickerBot-FF6B9D?style=for-the-badge&logo=googlecolab" alt="Colab Edition">
   </a>
 </p>
+
 ---
 
 <div align="center">
 
 ### 📢 Subscribe to My Telegram Sticker Channel!
 
-
 <p align="center">
   <a href="https://t.me/MaximXStickers">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://telegramcard.vercel.app/?username=MaximXStickers&theme=dark">
-      <source media="(prefers-color-scheme: light)" srcset="https://telegramcard.vercel.app/?username=MaximXStickers&theme=light">
-      <img src="https://telegramcard.vercel.app/?username=MaximXStickers&bgColor=rgba%28127%2C+29%2C+29%2C+1%29&textColor=%23fef2f2&subtleTextColor=%23fca5a5&extraColor=%23fbbf24&shadowColor=rgba%28251%2C+191%2C+36%2C+0.3%29&fontFamily=Arial%2C+sans-serif" alt="MaximXStickers Telegram Channel" width="850" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://telegramcard.vercel.app/?username=MaximXStickers&theme=dark&verified=true">
+      <source media="(prefers-color-scheme: light)" srcset="https://telegramcard.vercel.app/?username=MaximXStickers&&theme=light&verified=true">
+      <img src="https://telegramcard.vercel.app/?username=MaximXStickers&bgColor=rgba%28127%2C+29%2C+29%2C+1%29&textColor=%23fef2f2&subtleTextColor=%23fca5a5&extraColor=%23fbbf24&shadowColor=rgba%28251%2C+191%2C+36%2C+0.3%29&fontFamily=Arial%2C+sans-serif&verified=true" alt="Telegram Channel" width="850" />
     </picture>
   </a>
 </p>
